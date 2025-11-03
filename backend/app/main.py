@@ -1,10 +1,26 @@
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
+from app.serial_listener import SerialListener
 import asyncio
 
-app = FastAPI(title="ShapeVision Backend")
+app = FastAPI(title="Sketch2Form Backend")
 
 # store connected websocket clients
 clients = []
+
+# create the serial listener instance
+listener = SerialListener(port="COM3", baudrate=9600)
+
+@app.on_event("startup")
+async def startup_event():
+    """Start the serial listener when FastAPI starts."""
+    listener.start()
+    print("[Backend] Serial listener started.")
+    
+@app.on_event("shutdown")
+async def shutdown_event():
+    """Stop the serial listener when FastAPI shuts down."""
+    listener.stop()
+    print("[Backend] Serial listener stopped.")
 
 @app.get("/health")
 async def health_check():
@@ -17,11 +33,12 @@ async def websocket_endpoint(ws: WebSocket):
     print("Client connected. Total clients:", len(clients))
     try:
         while True:
-            # (Optional) if frontend sends any messages
+            # Keep alive / receive messages from frontend if needed
             data = await ws.receive_text()
             print("Received from client:", data)
     except WebSocketDisconnect:
         clients.remove(ws)
+        listener.unregister_client(ws)
         print("Client disconnected. Total clients:", len(clients))
 
 
