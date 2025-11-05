@@ -1,16 +1,21 @@
 import serial
+import time
 import json
 import threading
-import time
+import asyncio
 from fastapi import WebSocket
+from app.processor import process_shape
+
 
 class SerialListener:
-    def __init__(self, port="COM3", baudrate=9600):
+    def __init__(self, port="COM3", baudrate=9600, loop=None):
         self.port = port
         self.baudrate = baudrate
         self.running = False
         self.clients = set()  # WebSocket clients
         self.thread = None
+        self.loop = loop or asyncio.get_event_loop()  # ✅ store FastAPI’s main event loop
+        self.last_shape_time = 0  # ✅ Track last END_SHAPE time
 
     def start(self):
         self.running = True
@@ -23,12 +28,13 @@ class SerialListener:
     async def register_client(self, websocket: WebSocket):
         await websocket.accept()
         self.clients.add(websocket)
+        print("[SerialListener] WebSocket client connected")
 
     def unregister_client(self, websocket: WebSocket):
         self.clients.discard(websocket)
 
     async def _broadcast(self, message: dict):
-        # Send the data to all connected websocket clients
+        """Broadcast JSON message to all WebSocket clients."""
         to_remove = []
         for ws in list(self.clients):
             try:
@@ -39,46 +45,41 @@ class SerialListener:
             self.clients.remove(ws)
 
     def _read_serial(self):
+        """Read and process lines from the serial port."""
         buffer = []
-        last_line = None  # Track the last serial line
+        last_line = None
 
         try:
             with serial.Serial(self.port, self.baudrate, timeout=1) as ser:
-                print(f"[SerialListener] Connected to {self.port}")
+                print(f"[SerialListener] ✅ Connected to {self.port}")
+
                 while self.running:
                     line = ser.readline().decode(errors="ignore").strip()
-
                     if not line:
                         continue
-                    
-                    # Show every raw serial line
-                    print(f"[SerialListener] RAW: {line}")
 
-                    # --- Ignore duplicate END_SHAPE lines ---
-                    if line == "END_SHAPE" and last_line == "END_SHAPE":
-                        continue
-                    last_line = line
-                    # ---------------------------------------
+                    print(f"[SerialListener] RAW: {line}")
 
                     if line == "START_SHAPE":
                         buffer = []
                         print("[SerialListener] 🟢 START_SHAPE detected")
                         
-
                     elif line == "END_SHAPE":
+                        now = time.time()
+                        if now - self.last_shape_time < 1.0:
+                            continue
+                        self.last_shape_time = now
+
                         if buffer:
                             print(f"[SerialListener] 🔵 END_SHAPE received — {len(buffer)} points collected")
-                            import asyncio
-                            asyncio.run(self._broadcast({
-                                "type": "shape",
-                                "points": buffer
-                            }))
+                            # ✅ Always use the main FastAPI loop
+                            asyncio.run_coroutine_threadsafe(process_shape(buffer), self.loop)
                             buffer = []
+
 
                     elif line == "CLEARED":
                         print("[SerialListener] 🧹 CLEARED signal received")
-                        import asyncio
-                        asyncio.run(self._broadcast({"type": "clear"}))
+                        asyncio.run_coroutine_threadsafe(self._broadcast({"type": "clear"}), self.loop)
 
                     else:
                         try:
@@ -87,7 +88,6 @@ class SerialListener:
                             print(f"[SerialListener] ➕ Point: {point}")
                         except json.JSONDecodeError:
                             print(f"[SerialListener] ⚠️ Skipped invalid JSON: {line}")
-                            pass
 
         except serial.SerialException as e:
             print(f"[SerialListener] Serial error: {e}")
