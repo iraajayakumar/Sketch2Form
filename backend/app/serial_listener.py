@@ -25,13 +25,13 @@ class SerialListener:
     def stop(self):
         self.running = False
 
-    async def register_client(self, websocket: WebSocket):
-        await websocket.accept()
-        self.clients.add(websocket)
-        print("[SerialListener] WebSocket client connected")
+    # async def register_client(self, websocket: WebSocket):
+    #     await websocket.accept()
+    #     self.clients.add(websocket)
+    #     print("[SerialListener] WebSocket client connected")
 
-    def unregister_client(self, websocket: WebSocket):
-        self.clients.discard(websocket)
+    # def unregister_client(self, websocket: WebSocket):
+    #     self.clients.discard(websocket)
 
     async def _broadcast(self, message: dict):
         """Broadcast JSON message to all WebSocket clients."""
