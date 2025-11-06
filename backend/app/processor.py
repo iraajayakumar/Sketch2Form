@@ -52,9 +52,9 @@ async def process_shape(points):
         "type": "shape_result",
         "label": label,
         "confidence": confidence,
-        "points": norm_points
+        "points": points
     }))
 
-    print(f"[Processor] ✅ Shape saved as {label} ({confidence:.2f})")
+    print(f"[Processor] ✅ Shape: {label} ({confidence:.2f}) | Color: {points[0].get('c', 'N/A')}")
 
 

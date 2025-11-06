@@ -21,16 +21,55 @@ export const shapeMapper = {
 };
 
 /**
- * Convert Arduino color (RGB565) to Three.js color
+ * Arduino RGB565 color definitions (exact values from your sketch)
+ */
+const ARDUINO_COLORS = {
+  63488: '#FF0000',  // RED
+  65504: '#FFFF00',  // YELLOW
+  2016:  '#00FF00',  // GREEN
+  2047:  '#00FFFF',  // CYAN
+  31:    '#0000FF',  // BLUE
+  63519: '#FF00FF',  // MAGENTA
+};
+
+/**
+ * Convert Arduino RGB565 color to Three.js hex color
+ * @param {number} arduinoColor - RGB565 color value from Arduino
+ * @returns {string} Hex color string for Three.js
  */
 export const convertColor = (arduinoColor) => {
-  // Arduino sends RGB565 format (e.g., 63488 = red)
+  // If no color provided, default to white
+  if (!arduinoColor && arduinoColor !== 0) {
+    return '#FFFFFF';
+  }
+
+  // Check if it's one of the predefined Arduino colors
+  if (ARDUINO_COLORS[arduinoColor]) {
+    return ARDUINO_COLORS[arduinoColor];
+  }
+
+  // Fallback: Convert RGB565 to RGB888
+  // RGB565 format: RRRRR GGGGGG BBBBB (5-6-5 bits)
+  const r = ((arduinoColor >> 11) & 0x1F) * 8;  // 5 bits, scale to 0-255
+  const g = ((arduinoColor >> 5) & 0x3F) * 4;   // 6 bits, scale to 0-255
+  const b = (arduinoColor & 0x1F) * 8;          // 5 bits, scale to 0-255
+
   // Convert to hex color
-  if (!arduinoColor) return '#ffffff';
+  return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
+};
+
+/**
+ * Get color name from Arduino color code (for debugging/display)
+ */
+export const getColorName = (arduinoColor) => {
+  const colorNames = {
+    63488: 'Red',
+    65504: 'Yellow',
+    2016:  'Green',
+    2047:  'Cyan',
+    31:    'Blue',
+    63519: 'Magenta',
+  };
   
-  const r = ((arduinoColor >> 11) & 0x1F) * 8;
-  const g = ((arduinoColor >> 5) & 0x3F) * 4;
-  const b = (arduinoColor & 0x1F) * 8;
-  
-  return `rgb(${r}, ${g}, ${b})`;
+  return colorNames[arduinoColor] || 'Unknown';
 };

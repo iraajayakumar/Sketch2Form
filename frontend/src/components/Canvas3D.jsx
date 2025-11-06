@@ -1,15 +1,14 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, Grid, Box, Sphere, Cone } from '@react-three/drei';
-import * as THREE from 'three';
 import { shapeMapper, convertColor } from '../utils/shapeMapper';
 
-// Individual 3D Shape Component
+// Individual 3D Shape Component with animation
 const Shape3D = ({ shapeData, position }) => {
   const meshRef = useRef();
   const [scale, setScale] = useState(0);
 
-  // Spawn animation
+  // Spawn animation - separate useEffect
   useEffect(() => {
     let animationFrame;
     const animate = () => {
@@ -19,10 +18,14 @@ const Shape3D = ({ shapeData, position }) => {
       }
     };
     animate();
-    return () => cancelAnimationFrame(animationFrame);
-  }, []);
+    return () => {
+      if (animationFrame) {
+        cancelAnimationFrame(animationFrame);
+      }
+    };
+  }, [scale]);
 
-  // Rotate slowly
+  // Rotation animation - separate useEffect
   useEffect(() => {
     const interval = setInterval(() => {
       if (meshRef.current) {
@@ -60,13 +63,17 @@ const Shape3D = ({ shapeData, position }) => {
 export const Canvas3D = ({ shapeData }) => {
   const [shapes, setShapes] = useState([]);
 
-  // Add new shape when data arrives
+  // Add new shape when data arrives - SINGLE useEffect
   useEffect(() => {
-    if (shapeData && shapeData.label) {
+    if (shapeData && shapeData.label && shapeData.points) {
+      // Get color from any point (they should all be the same color)
+      const colorCode = shapeData.points.find(p => p.c)?.c;
+      
       const newShape = {
         id: Date.now(),
         label: shapeData.label,
-        color: convertColor(shapeData.points?.[0]?.c), // Get color from first point
+        color: convertColor(colorCode),
+        colorCode: colorCode,
         position: [
           (Math.random() - 0.5) * 6, // Random X
           Math.random() * 3 + 1,      // Random Y (above ground)
@@ -74,14 +81,23 @@ export const Canvas3D = ({ shapeData }) => {
         ],
       };
       
+      console.log('🎨 Spawning shape:', {
+        label: newShape.label,
+        colorCode: colorCode,
+        hexColor: newShape.color
+      });
+      
       setShapes((prev) => [...prev, newShape]);
 
-      // Remove shape after 15 seconds to avoid cluttering
-      setTimeout(() => {
+      // Remove shape after 15 seconds
+      const timeoutId = setTimeout(() => {
         setShapes((prev) => prev.filter((s) => s.id !== newShape.id));
       }, 15000);
+
+      // Cleanup timeout on unmount
+      return () => clearTimeout(timeoutId);
     }
-  }, [shapeData]);
+  }, [shapeData]); // Only depends on shapeData
 
   return (
     <Canvas
