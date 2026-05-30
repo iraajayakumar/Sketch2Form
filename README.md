@@ -1,10 +1,17 @@
 # Sketch2Form: 2D to 3D Shape Visualization
 
-<p align="center">
+<p align="left">
   <strong>Turn freehand sketches on an Arduino touchscreen into real-time 3D objects using AI.</strong>
 </p>
 
 ## Overview
+
+<p align="center">
+  <img src="./assets/arduino_screen_img.jpeg" alt="Arduino touchscreen drawing interface" 
+  height = "200" />
+  &nbsp;&nbsp;&nbsp;
+  <img src="./assets/web_interface_img.jpeg" alt="Browser-based 3D visualization output" height = "200" />
+</p>
 
 Sketch2Form is an interactive sketch-to-visualization system that captures freehand drawings on an Arduino-based touchscreen, classifies them using a trained machine learning model, and renders the recognized output as interactive 3D objects in a browser. The project was built to make 3D creation more intuitive, accessible, and immediate for users who may not be familiar with traditional CAD or modeling tools.
 
@@ -15,15 +22,6 @@ The complete pipeline connects physical sketch input, backend AI inference, and 
 Traditional 3D modeling tools are powerful, but they are often difficult for beginners because they depend on complex interfaces, technical workflows, and prior modeling experience. Sketch2Form was motivated by the idea of making digital creation feel as natural as sketching on paper while still using modern AI and visualization techniques.
 
 The project explores how embedded systems, machine learning, and real-time graphics can work together to lower the barrier to digital prototyping. This makes the concept especially relevant for STEM education, early-stage design ideation, accessible creativity tools, and interactive learning environments.
-
-## Example Output
-
-<p align="center">
-  <img src="./assets/arduino_screen_img.jpeg" alt="Arduino touchscreen drawing interface" 
-  height = "200" />
-  &nbsp;&nbsp;&nbsp;
-  <img src="./assets/web_interface_img.jpeg" alt="Browser-based 3D visualization output" height = "200" />
-</p>
 
 <p align="center">
   <em>Left: the touchscreen drawing surface. Right: the corresponding 3D visualization rendered in the frontend.</em>
@@ -153,4 +151,4 @@ Sketch2Form/
 4. Draw on the Arduino touchscreen and observe the 3D output. 
 
 ### Demo Video
-- **Demo Video:** (https://drive.google.com/file/d/1cIdvhboVEUSlr9opdjpFIzPnXLAL3sLB/view?usp=drive_link)
+- **Demo Video:** https://drive.google.com/file/d/1cIdvhboVEUSlr9opdjpFIzPnXLAL3sLB/view?usp=drive_link
