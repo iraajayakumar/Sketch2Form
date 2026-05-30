@@ -13,6 +13,10 @@
   <img src="./assets/web_interface_img.jpeg" alt="Browser-based 3D visualization output" height = "200" />
 </p>
 
+<p align="center">
+  <em>Left: the touchscreen drawing surface. Right: the corresponding 3D visualization rendered in the frontend.</em>
+</p>
+
 Sketch2Form is an interactive sketch-to-visualization system that captures freehand drawings on an Arduino-based touchscreen, classifies them using a trained machine learning model, and renders the recognized output as interactive 3D objects in a browser. The project was built to make 3D creation more intuitive, accessible, and immediate for users who may not be familiar with traditional CAD or modeling tools.
 
 The complete pipeline connects physical sketch input, backend AI inference, and browser-based rendering into one continuous real-time workflow. A user draws a basic geometric shape such as a square, rectangle, triangle, or circle on the touchscreen, and the system converts that sketch into a corresponding 3D form on the web interface.
@@ -22,10 +26,6 @@ The complete pipeline connects physical sketch input, backend AI inference, and 
 Traditional 3D modeling tools are powerful, but they are often difficult for beginners because they depend on complex interfaces, technical workflows, and prior modeling experience. Sketch2Form was motivated by the idea of making digital creation feel as natural as sketching on paper while still using modern AI and visualization techniques.
 
 The project explores how embedded systems, machine learning, and real-time graphics can work together to lower the barrier to digital prototyping. This makes the concept especially relevant for STEM education, early-stage design ideation, accessible creativity tools, and interactive learning environments.
-
-<p align="center">
-  <em>Left: the touchscreen drawing surface. Right: the corresponding 3D visualization rendered in the frontend.</em>
-</p>
 
 ## What the Project Does
 
