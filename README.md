@@ -29,15 +29,13 @@ The project explores how embedded systems, machine learning, and real-time graph
   <em>Left: the touchscreen drawing surface. Right: the corresponding 3D visualization rendered in the frontend.</em>
 </p>
 
-## Working Demo
+## What the Project Does
 
 <p align="center">
   <img src="./assets/gif1.gif" alt="Sketch2Form workflow demo 1" width="45%" />
   &nbsp;&nbsp;&nbsp;
   <img src="./assets/gif2.gif" alt="Sketch2Form workflow demo 2" width="45%" />
 </p>
-
-## What the Project Does
 
 - Captures freehand sketch data from an Arduino touchscreen.
 - Records point sequences along with coordinates, time, and selected color.
@@ -55,7 +53,7 @@ The project is organized as a three-stage pipeline:
 3. **Visualization layer** – a React + Three.js frontend receives recognized shapes through WebSocket and spawns the corresponding 3D objects.
 
 <p align="center">
-  <img src="./assets/sketch2form_use_case_diagram.pngM" alt="Use case diagram" height="300" />
+  <img src="./assets/sketch2form_use_case_diagram.png" alt="Use case diagram" height="300" />
   &nbsp;&nbsp;&nbsp;
   <img src="./assets/sketch2form_circuit_diagram.png" alt="Circuit diagram" width="300" />
 </p>
@@ -116,12 +114,6 @@ To improve generalization, sketches were collected from multiple users so the mo
 - The collected data was cleaned and normalized.
 - Point sequences were prepared in a format suitable for model training.
 
-## Data Preprocessing
-
-Before training, the sketch data was normalized to improve invariance across users and drawing conditions. According to the report, normalization was used to reduce the impact of scale and orientation differences, while iterative refinement helped remove noise and improve classification robustness.
-
-In practical terms, this means the pipeline standardizes sketch input so that a large square and a small square, or a slightly tilted triangle, can still be recognized as the same conceptual shape. This preprocessing stage is essential for converting raw touchscreen input into a stable feature representation for the ML model.
-
 ## Model Training
 
 The AI component was trained on the newly collected hand-drawn dataset using TensorFlow Lite-based shape classification. The report states that the model was trained on thousands of point-sequence samples and achieved **over 90% validation accuracy** on the core geometric classes used in the project.
@@ -161,4 +153,4 @@ Sketch2Form/
 4. Draw on the Arduino touchscreen and observe the 3D output. 
 
 ### Demo Video
-- **Demo Video:** `https://drive.google.com/file/d/1cIdvhboVEUSlr9opdjpFIzPnXLAL3sLB/view?usp=drive_link`
+- **Demo Video:** (https://drive.google.com/file/d/1cIdvhboVEUSlr9opdjpFIzPnXLAL3sLB/view?usp=drive_link)
