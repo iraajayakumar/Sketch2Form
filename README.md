@@ -17,6 +17,9 @@
   <em>Left: the touchscreen drawing surface. Right: the corresponding 3D visualization rendered in the frontend.</em>
 </p>
 
+### Demo Video
+- **Demo Video:** https://drive.google.com/file/d/1cIdvhboVEUSlr9opdjpFIzPnXLAL3sLB/view?usp=drive_link
+
 Sketch2Form is an interactive sketch-to-visualization system that captures freehand drawings on an Arduino-based touchscreen, classifies them using a trained machine learning model, and renders the recognized output as interactive 3D objects in a browser. The project was built to make 3D creation more intuitive, accessible, and immediate for users who may not be familiar with traditional CAD or modeling tools.
 
 The complete pipeline connects physical sketch input, backend AI inference, and browser-based rendering into one continuous real-time workflow. A user draws a basic geometric shape such as a square, rectangle, triangle, or circle on the touchscreen, and the system converts that sketch into a corresponding 3D form on the web interface.
@@ -149,6 +152,3 @@ Sketch2Form/
 2. Start the React development server.
 3. Open the local frontend in a browser.
 4. Draw on the Arduino touchscreen and observe the 3D output. 
-
-### Demo Video
-- **Demo Video:** https://drive.google.com/file/d/1cIdvhboVEUSlr9opdjpFIzPnXLAL3sLB/view?usp=drive_link
